@@ -1,8 +1,16 @@
-version: '3.8'
+version: "3.8"
 
 services:
   moviehub-frontend:
     image: theodor567/moviehub-frontend:latest
+    container_name: moviehub-frontend-container
     ports:
-      - "3000:80" #localhost:3000 ; Port 80 open by nginx -> mapped to 3000 locally
+      - "3000:80" # localhost:3000 ; Port 80 open by nginx -> mapped to 3000 locally
     restart: unless-stopped
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --cleanup --interval 30 moviehub-frontend-container
