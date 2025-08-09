@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  moviehub-frontend:
+    image: theodor567/moviehub-frontend:latest
+    ports:
+      - "3000:80" #localhost:3000 ; Port 80 open by nginx -> mapped to 3000 locally
+    restart: unless-stopped
