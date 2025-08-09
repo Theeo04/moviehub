@@ -21,9 +21,9 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build the Docker image
-        run: docker build -t theodor567/moviehub-frontend:latest .
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/moviehub-frontend:latest .
 
       - name: Push the Docker image
-        run: docker push theodor567/moviehub-frontend:latest
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/moviehub-frontend:latest
 
         #Locally, the watchtower will automatically update the container when a new image is pushed on Docker Hub.
