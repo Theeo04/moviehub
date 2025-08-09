@@ -9,7 +9,6 @@ function App() {
     <>
       <Navbar />
       <main className="container mx-auto px-4 py-6 lg:pr-72">
-        <h2 className="text-2xl font-semibold mb-6">Welcome to MovieHub!</h2>
         <CarouselMovie />
       </main>
       <UserCharacterList />       {/* Pentru desktop */}
