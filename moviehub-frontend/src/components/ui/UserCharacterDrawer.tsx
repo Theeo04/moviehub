@@ -1,4 +1,3 @@
-// src/components/ui/UserCharacterDrawer.tsx
 import { useState, useEffect } from "react";
 import {
   Sheet,
