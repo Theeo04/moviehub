@@ -3,9 +3,12 @@ name: Docker Image CI
 on:
   push:
     branches: ["main"]
+    paths:
+      - 'moviehub-frontend/**'
   pull_request:
     branches: ["main"]
-
+    paths:
+      - 'moviehub-frontend/**'
 jobs:
   build:
     runs-on: ubuntu-latest
