@@ -1,0 +1,69 @@
+networks:
+  moviehub-network:
+    driver: bridge
+
+services:
+  moviehub-frontend:
+    build:
+      context: ./moviehub-frontend
+      dockerfile: Dockerfile
+    container_name: moviehub-frontend-container
+    ports:
+    - "3000:80"
+    environment:
+    - REACT_APP_BACKEND_URL=http://moviehub-backend-container:8000
+    depends_on:
+    - moviehub-backend
+    networks:
+    - moviehub-network
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11435:11434" # expune portul API Ollama pe host
+    volumes:
+      - ollama_data:/root/.ollama
+    # command: ["ollama", "run", "gemma3:1b"]
+    networks:
+      - moviehub-network
+
+  moviehub-backend:
+    build:
+      context: ./moviehub-llm-backend
+      dockerfile: Dockerfile
+    container_name: moviehub-backend-container
+    ports:
+      - "8000:8000"
+    environment:
+      OLLAMA_URL: "http://ollama:11434/api/chat"
+      DATABASE_URL: "postgresql://moviehub_user:moviehub_pass@db:5432/moviehub"
+    depends_on:
+      - ollama
+    networks:
+      - moviehub-network
+
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: moviehub_user
+      POSTGRES_PASSWORD: moviehub_pass
+      POSTGRES_DB: moviehub
+    ports:
+      - "5432:5432"  # optional, dacă vrei acces direct din host
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # volum persistent
+
+  # watchtower:
+  #   image: containrrr/watchtower
+  #   container_name: watchtower
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   command: --cleanup --interval 30 moviehub-frontend-container moviehub-backend-container ollama
+  #   networks:
+  #     - moviehub-network
+
+volumes:
+  ollama_data:
+  postgres_data:
